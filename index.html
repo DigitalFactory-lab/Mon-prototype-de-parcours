@@ -121,6 +121,11 @@ body{
 }
 .axe-meta{flex:1;}
 .axe-jour{font-size:10px; text-transform:uppercase; letter-spacing:0.08em; color:var(--gray-mid); font-weight:600;}
+.vu-toggle{display:inline-flex; align-items:center; gap:6px; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; font-weight:600; color:var(--ink-soft); cursor:pointer; user-select:none; margin-right:12px; white-space:nowrap;}
+.vu-toggle input{accent-color:var(--copper); width:15px; height:15px; cursor:pointer;}
+.axe-card.axe-notvu{opacity:0.6;}
+.axe-card.axe-notvu .axe-label{color:var(--gray-mid);}
+.axe-notvu-msg{padding:14px 20px 18px; font-size:13px; color:var(--gray-mid); font-style:italic;}
 .axe-label{font-family:'Oswald', sans-serif; font-weight:600; font-size:16px; margin-top:1px;}
 .axe-desc{font-size:13px; color:var(--ink-soft); padding:12px 20px 0; line-height:1.5;}
 
@@ -310,7 +315,6 @@ const AXES = [
   {
     id: "lecture_plan",
     label: "Lecture de plan & analyse technique",
-    jour: "Jour 1",
     icon: "search",
     description: "Comparer un plan et un objet réel, repérer les écarts, reconstituer un cahier des charges.",
     items: [
@@ -323,7 +327,6 @@ const AXES = [
   {
     id: "conception_numerique",
     label: "Conception numérique (CAO / vectoriel)",
-    jour: "Jour 1-3",
     icon: "design",
     description: "Modéliser une pièce sur un logiciel de dessin vectoriel et de modélisation 3D, du croquis simple à la pièce fonctionnelle.",
     items: [
@@ -336,7 +339,6 @@ const AXES = [
   {
     id: "contraintes_fabrication",
     label: "Contraintes de fabrication numérique",
-    jour: "Jour 2-3",
     icon: "gauge",
     description: "Anticiper les paramètres physiques qui conditionnent un bon résultat : remplissage, temps de fabrication, jeu de découpe, tolérances.",
     items: [
@@ -349,7 +351,6 @@ const AXES = [
   {
     id: "pilotage_machines",
     label: "Pilotage des machines de fabrication numérique",
-    jour: "Jour 1-4",
     icon: "machine",
     description: "Manipuler en autonomie les machines du parc digital factory : impression 3D, découpe laser, impression UV.",
     items: [
@@ -362,7 +363,6 @@ const AXES = [
   {
     id: "communication_argumentation",
     label: "Communication & argumentation technique",
-    jour: "Jour 3-5",
     icon: "mic",
     description: "Défendre un choix de conception à l'oral, construire un script, prendre la parole face caméra.",
     items: [
@@ -375,7 +375,6 @@ const AXES = [
   {
     id: "autonomie_projet",
     label: "Autonomie, rigueur & gestion de projet",
-    jour: "Transversal",
     icon: "clock",
     description: "Tenir un délai serré, ajuster son rythme, collaborer en équipe sous narration de mission.",
     items: [
@@ -383,6 +382,17 @@ const AXES = [
       "Collaborer en sous-groupe (rôles, entraide, écoute)",
       "Tenir compte des délais et organiser ses tâches",
       "Demander de l'aide quand quelque chose bloque"
+    ]
+  },
+  {
+    id: "electronique",
+    label: "Électronique & systèmes programmables",
+    icon: "gauge",
+    description: "Concevoir un montage électronique, le simuler puis le tester en réel, repérer ce qui ne marche pas et l'améliorer.",
+    items: [
+      "Simuler un montage / câblage sur ordinateur et le tester",
+      "Passer du montage virtuel au montage réel",
+      "Repérer une panne, comprendre pourquoi, et améliorer le système"
     ]
   }
 ];
@@ -598,6 +608,37 @@ const FORMATIONS = [
     penurie: true
   },
 
+  // ---------- Électronique & systèmes programmables ----------
+  {
+    id: "forem_electro_domotique",
+    label: "Forem — Électricité, domotique et alarmes",
+    organisme: "Forem (Borinage 2000 — Jemappes)",
+    lien_axes: ["electronique", "contraintes_fabrication"],
+    se_profile: { soin: 2, organisation: 2, autonomie_se: 2, fiabilite: 3 },
+    duree: "288 h · jour · 2 sessions/an — gratuit, demandeur d'emploi",
+    note: "Bases d'électricité et d'électronique, câblage sur panneaux, domotique et alarmes, avec remise à niveau en français/maths. Bonne première marche concrète après un module Arduino.",
+    penurie: false
+  },
+  {
+    id: "ifapme_domotique",
+    label: "IFAPME — Conseiller en domotique et Smart Home",
+    organisme: "IFAPME (Namur–Brabant wallon, Les Isnes)",
+    lien_axes: ["electronique", "conception_numerique", "communication_argumentation"],
+    se_profile: { soin: 3, organisation: 3, autonomie_se: 3, equipe: 3 },
+    duree: "1 an · cours du soir et week-end",
+    note: "Concevoir des installations connectées : systèmes filaires (KNX), IoT, objets communicants, cybersécurité des équipements. Prolonge l'électronique programmable vers un métier.",
+    penurie: false
+  },
+  {
+    id: "forem_electro_indus",
+    label: "Piste métier — Technicien de maintenance en électronique industrielle",
+    organisme: "Forem (métier, plusieurs centres)",
+    lien_axes: ["electronique", "contraintes_fabrication"],
+    se_profile: { soin: 3, organisation: 3, autonomie_se: 3, perseverance: 3 },
+    duree: "Voir sessions Forem — métier en pénurie (liste 2026)",
+    note: "Horizon plus qualifiant : diagnostic et réparation de systèmes électroniques automatisés. En pénurie en 2026, opportunités concentrées en province de Liège.",
+    penurie: true
+  },
   // ---------- Autres pistes fiables ----------
   {
     id: "forem_fablab",
@@ -648,6 +689,7 @@ let state = {
   meta: { nom: "", prenom: "", date: new Date().toISOString().slice(0,10), formateur: "" },
   scores: {},       // { axeId: { itemIndex: niveau } }
   se_scores: {},    // { seId: niveau } — volet savoir-être
+  notVu: {},        // { axeId: true } — axes non abordés avec ce groupe
   notes: {},        // { axeId: "texte libre" }
   decision: { type: "", commentaire: "" },
   mode: "evaluation"
@@ -702,9 +744,14 @@ function allAxesScores(){
   return out;
 }
 
+function axeVu(axeId){
+  return !state.notVu || !state.notVu[axeId];
+}
+
 function globalProgress(){
   let total = 0, filled = 0;
   AXES.forEach(a => {
+    if (!axeVu(a.id)) return;
     a.items.forEach((_, i) => {
       total++;
       const v = state.scores[a.id]?.[i];
@@ -736,8 +783,10 @@ function computeFormationMatches(){
   const seRenseigne = SAVOIR_ETRE.some(se => state.se_scores[se.id] !== undefined);
 
   return FORMATIONS.map(f => {
-    // composante intérêt : moyenne des axes liés à la formation
-    const axesVals = f.lien_axes.map(id => ratio[id] || 0);
+    // composante intérêt : moyenne des axes liés à la formation,
+    // en ignorant les axes non abordés avec ce groupe (ni bonus ni malus)
+    const axesVus = f.lien_axes.filter(id => axeVu(id));
+    const axesVals = axesVus.map(id => ratio[id] || 0);
     const interetScore = axesVals.length ? axesVals.reduce((a,b)=>a+b,0)/axesVals.length : 0;
 
     // composante savoir-être : proximité entre le profil du stagiaire
@@ -926,22 +975,38 @@ function renderEvaluation(){
       });
     });
   });
+
+  el.querySelectorAll('input[data-vu]').forEach(cb => {
+    cb.addEventListener('change', e => {
+      const id = e.target.dataset.vu;
+      if (!state.notVu) state.notVu = {};
+      if (e.target.checked) delete state.notVu[id];
+      else state.notVu[id] = true;
+      renderEvaluation();
+      updateProgress();
+    });
+  });
 }
 
 function renderAxeCard(axe){
+  const vu = !state.notVu || !state.notVu[axe.id];
   const sc = axeScore(axe.id);
   const badgeColor = sc.answeredCount === 0 ? 'gray' : sc.pct >= 70 ? 'teal' : sc.pct >= 35 ? 'amber' : 'coral';
   return `
-    <div class="axe-card">
+    <div class="axe-card ${vu ? '' : 'axe-notvu'}">
       <div class="axe-head">
         <div class="axe-icon">${icon(axe.icon, 20)}</div>
         <div class="axe-meta">
-          <div class="axe-jour">${axe.jour}</div>
           <div class="axe-label">${axe.label}</div>
         </div>
-        <div class="axe-score-dot" title="Repère visuel — sans valeur chiffrée" style="background:${colorHex(badgeColor)};"></div>
+        <label class="vu-toggle" title="Décoche si ce module n'a pas été abordé avec ce groupe">
+          <input type="checkbox" data-vu="${axe.id}" ${vu ? 'checked' : ''}>
+          <span>${vu ? 'Abordé' : 'Non abordé'}</span>
+        </label>
+        <div class="axe-score-dot" title="Repère visuel — sans valeur chiffrée" style="background:${colorHex(vu ? badgeColor : 'gray')};"></div>
       </div>
       <div class="axe-desc">${axe.description}</div>
+      ${vu ? `
       <div class="axe-body">
         ${axe.items.map((item, i) => {
           const cur = state.scores[axe.id]?.[i];
@@ -955,9 +1020,9 @@ function renderAxeCard(axe){
         }).join('')}
         <div class="axe-note">
           <span class="axe-note-label">Tu veux ajouter quelque chose ? (un mot, une anecdote)</span>
-          <textarea data-note-axe="${axe.id}" placeholder="Ex : j'ai adoré manipuler la découpeuse laser au Jour 3..."></textarea>
+          <textarea data-note-axe="${axe.id}" placeholder="Ex : j'ai adoré manipuler la découpeuse laser...">${state.notes[axe.id] || ''}</textarea>
         </div>
-      </div>
+      </div>` : `<div class="axe-notvu-msg">Module non abordé avec ce groupe — écarté de la synthèse et des pistes.</div>`}
     </div>
   `;
 }
@@ -973,7 +1038,7 @@ function renderSynthese(){
     <div class="synth-grid">
       <div class="synth-card">
         <h3>Profil d'intérêt</h3>
-        ${AXES.map(a => {
+        ${AXES.filter(a => axeVu(a.id)).map(a => {
           const sc = scores[a.id];
           const color = sc.answeredCount === 0 ? 'gray' : sc.pct >= 70 ? 'teal' : sc.pct >= 35 ? 'amber' : 'coral';
           return `
@@ -1022,18 +1087,24 @@ const AXIS_SHORT_LABELS = {
   contraintes_fabrication: "Contraintes fab.",
   pilotage_machines: "Pilotage machines",
   communication_argumentation: "Communication",
-  autonomie_projet: "Autonomie"
+  autonomie_projet: "Autonomie",
+  electronique: "Électronique"
 };
 
 function renderRadar(scores){
   const holder = document.getElementById('radar-holder');
+  const vusAxes = AXES.filter(a => axeVu(a.id));
+  if (vusAxes.length < 3){
+    holder.innerHTML = `<div style="font-size:12px; color:var(--gray-mid); text-align:center; padding:40px 10px;">Le radar s'affiche à partir de 3 modules abordés.</div>`;
+    return;
+  }
   const drawSize = 280, margin = 70;
   const size = drawSize + margin*2;
   const cx = size/2, cy = size/2, r = drawSize/2 - 10;
-  const n = AXES.length;
+  const n = vusAxes.length;
   const angle = i => (Math.PI*2*i/n) - Math.PI/2;
 
-  const points = AXES.map((a,i) => {
+  const points = vusAxes.map((a,i) => {
     const pct = scores[a.id].pct / 100;
     const x = cx + Math.cos(angle(i)) * r * pct;
     const y = cy + Math.sin(angle(i)) * r * pct;
@@ -1042,7 +1113,7 @@ function renderRadar(scores){
 
   const gridLevels = [0.25, 0.5, 0.75, 1];
   const gridPolys = gridLevels.map(lv => {
-    const pts = AXES.map((_, i) => {
+    const pts = vusAxes.map((_, i) => {
       const x = cx + Math.cos(angle(i)) * r * lv;
       const y = cy + Math.sin(angle(i)) * r * lv;
       return `${x},${y}`;
@@ -1050,13 +1121,13 @@ function renderRadar(scores){
     return `<polygon points="${pts}" fill="none" stroke="#DCD5C7" stroke-width="1"/>`;
   }).join('');
 
-  const axisLines = AXES.map((_, i) => {
+  const axisLines = vusAxes.map((_, i) => {
     const x = cx + Math.cos(angle(i)) * r;
     const y = cy + Math.sin(angle(i)) * r;
     return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#DCD5C7" stroke-width="1"/>`;
   }).join('');
 
-  const labels = AXES.map((a, i) => {
+  const labels = vusAxes.map((a, i) => {
     const lx = cx + Math.cos(angle(i)) * (r+28);
     const ly = cy + Math.sin(angle(i)) * (r+28);
     const anchor = Math.cos(angle(i)) > 0.3 ? 'start' : Math.cos(angle(i)) < -0.3 ? 'end' : 'middle';
@@ -1076,7 +1147,7 @@ function renderRadar(scores){
 
 function renderStrengths(scores){
   const holder = document.getElementById('strengths-holder');
-  const answered = AXES.map(a => ({ axe:a, sc: scores[a.id] })).filter(r => r.sc.answeredCount > 0);
+  const answered = AXES.filter(a => axeVu(a.id)).map(a => ({ axe:a, sc: scores[a.id] })).filter(r => r.sc.answeredCount > 0);
   const ranked = answered.sort((x,y) => y.sc.pct - x.sc.pct);
   const strong = ranked.filter(r => r.sc.pct >= 60).slice(0,3);
   const weak = ranked.filter(r => r.sc.pct < 40).slice(-3).reverse();
@@ -1254,6 +1325,7 @@ function renderArchives(){
       if (raw){
         state = JSON.parse(raw);
         if (!state.se_scores) state.se_scores = {};
+        if (!state.notVu) state.notVu = {};
         savedKey = key;
         renderShell();
       }
@@ -1265,7 +1337,7 @@ function startNewBilan(){
   if (!confirm("Démarrer un nouveau bilan vierge ? Le bilan actuel non enregistré sera perdu.")) return;
   state = {
     meta: { nom:"", prenom:"", date: new Date().toISOString().slice(0,10), formateur: state.meta.formateur || "" },
-    scores: {}, se_scores: {}, notes: {}, decision: { type:"", commentaire:"" }, mode: "evaluation"
+    scores: {}, se_scores: {}, notVu: {}, notes: {}, decision: { type:"", commentaire:"" }, mode: "evaluation"
   };
   savedKey = null;
   renderShell();
